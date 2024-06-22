@@ -16,7 +16,10 @@ const DEFAULT_STATE: ReduxManentState = {
   version: undefined,
 };
 
-export const reduxManentState: Reducer = (state, _action): ReduxManentState => {
+export const reduxManentState: Reducer = (
+  state,
+  _action: Action
+): ReduxManentState => {
   if (state === undefined) {
     // Just return the default initial state. Actions are managed internally
     return DEFAULT_STATE;
