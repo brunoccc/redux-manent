@@ -1,16 +1,26 @@
 {
   "name": "redux-manent",
   "version": "0.1.0",
-  "main": "./src/index.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "tsc",
+    "build": "tsup",
+    "debug": "npm run build && yalc push",
     "format": "prettier --write \"{src,test,typescript_test}/**/*.{js,ts}\"",
-    "format:check": "prettier --check \"{src,test,typescript_test}/**/*.{js,ts}\"",    
+    "format:check": "prettier --check \"{src,test,typescript_test}/**/*.{js,ts}\"",
     "lint": "eslint . --ext .ts,.tsx",
-    "prepublishOnly": "npm run build",
     "test": "jest"
   },
-  "keywords": ["redux", "persistence", "react", "react-native"],
+  "keywords": [
+    "redux",
+    "persistence",
+    "react",
+    "react-native"
+  ],
   "author": "Bruno Cicciarello",
   "license": "MIT",
   "description": "A simple-to-use Redux persistence library",
@@ -30,6 +40,7 @@
     "jest": "^29.7.0",
     "prettier": "^2.6.2",
     "ts-jest": "^29.1.4",
+    "tsup": "^8.1.0",
     "typescript": "^5.4.5"
   },
   "peerDependencies": {
