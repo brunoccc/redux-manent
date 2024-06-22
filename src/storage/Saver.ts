@@ -3,15 +3,15 @@ import {
   isAllowed,
   KeyValueStore,
   STORAGE_VERSION_KEY,
-} from '../config';
-import { Log } from '../utils';
+} from "../config";
+import { Log } from "../utils";
 
 let currentVersion: number | undefined;
 
 export const saveState = (
   before: KeyValueStore,
   after: KeyValueStore,
-  config: Config,
+  config: Config
 ) => {
   if (config.version !== currentVersion) {
     writeData(STORAGE_VERSION_KEY, { value: config.version }, config);
@@ -22,10 +22,10 @@ export const saveState = (
     const newValue = after[key as keyof KeyValueStore];
     if (oldValue !== newValue) {
       if (isAllowed(key, config)) {
-        Log.v?.('Key change detected', { key, oldValue, newValue });
+        Log.v?.("Key change detected", { key, oldValue, newValue });
         writeData(key, newValue, config);
       } else {
-        Log.v?.('Key change blacklisted', { key, oldValue, newValue });
+        Log.v?.("Key change blacklisted", { key, oldValue, newValue });
       }
     }
   }
@@ -37,7 +37,7 @@ let coolDown = false;
 const writeData = (
   key: string,
   newValue: object | undefined,
-  config: Config,
+  config: Config
 ): boolean => {
   if (coolDown) {
     // Cooldown in progress: just cache the data
@@ -67,13 +67,13 @@ const writeData = (
 const writeKey = (
   key: string,
   newValue: object | undefined,
-  config: Config,
+  config: Config
 ) => {
   if (newValue === undefined) {
-    Log.v?.('Key removed', { key });
+    Log.v?.("Key removed", { key });
     config.storage.removeItem(key);
   } else {
-    Log.v?.('Key saved', { key, newValue });
+    Log.v?.("Key saved", { key, newValue });
     config.storage.setItem(key, config.serializer.serialize(newValue));
   }
 };

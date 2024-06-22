@@ -1,5 +1,5 @@
-import { Config } from './Config';
-import { Log } from '../utils';
+import { Config } from "./Config";
+import { Log } from "../utils";
 
 type Cache = Record<string, boolean>;
 
@@ -31,8 +31,8 @@ const buildCache = (config: Config): { [key: string]: boolean } => {
     cache[key] = false;
   });
 
-  cache['reduxManentState'] = false;
+  cache["reduxManentState"] = false;
 
-  Log.v?.('Filter cache built', { cache });
+  Log.v?.("Filter cache built", { cache });
   return cache;
 };

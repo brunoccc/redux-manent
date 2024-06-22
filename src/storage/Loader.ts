@@ -3,13 +3,13 @@ import {
   KeyValueStore,
   STORAGE_VERSION_KEY,
   isAllowed,
-} from '../config';
-import { Dispatch } from 'redux';
-import { Log } from '../utils';
-import { readyAction } from '../state';
+} from "../config";
+import { Dispatch } from "redux";
+import { Log } from "../utils";
+import { readyAction } from "../state";
 
 export const loadState = async (dispatch: Dispatch, config: Config) => {
-  Log.d?.('Loading started...');
+  Log.d?.("Loading started...");
   const loadedState: KeyValueStore = {};
   const loaders: Promise<any>[] = [];
   const loadedVersion =
@@ -23,7 +23,7 @@ export const loadState = async (dispatch: Dispatch, config: Config) => {
             loadedState[key] = value;
           }
           resolve(true);
-        }),
+        })
       );
     }
   });
@@ -33,19 +33,19 @@ export const loadState = async (dispatch: Dispatch, config: Config) => {
   const migratedState = await config.migrateState(
     loadedState,
     loadedVersion,
-    config.version,
+    config.version
   );
 
-  Log.d?.('Done!');
+  Log.d?.("Done!");
   dispatch(readyAction(migratedState, config.version));
 };
 
 const readKey = async (key: string, config: Config): Promise<any> => {
   const value = await config.storage.getItem(key);
   if (value !== null) {
-    Log.v?.('Key loaded:', key, value);
+    Log.v?.("Key loaded:", key, value);
     return config.serializer.deserialize(value);
   }
-  Log.v?.('Key not found:', key);
+  Log.v?.("Key not found:", key);
   return undefined;
 };

@@ -4,6 +4,8 @@
   "main": "./src/index.ts",
   "scripts": {
     "build": "tsc",
+    "format": "prettier --write \"{src,test,typescript_test}/**/*.{js,ts}\"",
+    "format:check": "prettier --check \"{src,test,typescript_test}/**/*.{js,ts}\"",    
     "lint": "eslint . --ext .ts,.tsx",
     "prepublishOnly": "npm run build",
     "test": "jest"

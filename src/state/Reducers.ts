@@ -1,8 +1,8 @@
-import { Action, Dispatch, Reducer } from 'redux';
-import { ACTION_READY, ACTION_START, ReduxManentAction } from './Actions';
-import { Config, KeyValueStore } from '../config';
-import { loadState } from '../storage';
-import { Log } from '../utils';
+import { Action, Dispatch, Reducer } from "redux";
+import { ACTION_READY, ACTION_START, ReduxManentAction } from "./Actions";
+import { Config, KeyValueStore } from "../config";
+import { loadState } from "../storage";
+import { Log } from "../utils";
 
 export type ReduxManentState = {
   loading: boolean;
@@ -28,7 +28,7 @@ export const handleInternalActions = (
   dispatch: Dispatch,
   state: KeyValueStore,
   action: Action,
-  config: Config,
+  config: Config
 ) => {
   if (action.type === ACTION_START || action.type === ACTION_READY) {
     const manentAction = action as ReduxManentAction;
@@ -60,7 +60,7 @@ export const handleInternalActions = (
       default:
         // This switch case must be exaustive
         const wtf: never = manentAction;
-        Log.e?.('Unknown internal action detected', wtf);
+        Log.e?.("Unknown internal action detected", wtf);
     }
   }
   return state;

@@ -1,9 +1,9 @@
-import { Reducer } from 'redux';
-import { sanitizeConfig, ReduxManentConfig, Config } from '..';
-import { NullStorage, DefaultSerializer, Serializer } from '../../storage';
+import { Reducer } from "redux";
+import { sanitizeConfig, ReduxManentConfig, Config } from "..";
+import { NullStorage, DefaultSerializer, Serializer } from "../../storage";
 
-describe('sanitizeConfig', () => {
-  it('should use default values if no config is provided', () => {
+describe("sanitizeConfig", () => {
+  it("should use default values if no config is provided", () => {
     const reducer = { item1: {} as Reducer };
     const storage = NullStorage;
     const config: ReduxManentConfig = { reducer, storage };
@@ -19,10 +19,10 @@ describe('sanitizeConfig', () => {
     expect(sanitizedConfig.blacklist).toEqual([]);
   });
 
-  it('should override default values with provided config', () => {
+  it("should override default values with provided config", () => {
     const customSerializer: Serializer = {
       serialize: function (o: object): string {
-        return 'hello';
+        return "hello";
       },
       deserialize: function (s: string): object {
         return {};
@@ -39,8 +39,8 @@ describe('sanitizeConfig', () => {
       version: 1,
       migrateState: customMigrateState,
       verbose: true,
-      whitelist: ['item1'],
-      blacklist: ['item2'],
+      whitelist: ["item1"],
+      blacklist: ["item2"],
     };
     const sanitizedConfig: Config = sanitizeConfig(config);
 
@@ -51,11 +51,11 @@ describe('sanitizeConfig', () => {
     expect(sanitizedConfig.version).toBe(1);
     expect(sanitizedConfig.migrateState).toBe(customMigrateState);
     expect(sanitizedConfig.verbose).toBe(true);
-    expect(sanitizedConfig.whitelist).toEqual(['item1']);
-    expect(sanitizedConfig.blacklist).toEqual(['item2']);
+    expect(sanitizedConfig.whitelist).toEqual(["item1"]);
+    expect(sanitizedConfig.blacklist).toEqual(["item2"]);
   });
 
-  it('should retain default values for undefined properties in provided config', () => {
+  it("should retain default values for undefined properties in provided config", () => {
     const reducer = { item1: {} as Reducer };
     const storage = NullStorage;
     const config: ReduxManentConfig = {
@@ -81,14 +81,14 @@ describe('sanitizeConfig', () => {
     expect(sanitizedConfig.blacklist).toEqual([]);
   });
 
-  it('should merge provided config with default values', () => {
+  it("should merge provided config with default values", () => {
     const reducer = { item1: {} as Reducer };
     const storage = NullStorage;
     const config: ReduxManentConfig = {
       reducer,
       storage,
-      whitelist: ['item1'],
-      blacklist: ['item2'],
+      whitelist: ["item1"],
+      blacklist: ["item2"],
     };
     const sanitizedConfig: Config = sanitizeConfig(config);
 
@@ -98,7 +98,7 @@ describe('sanitizeConfig', () => {
     expect(sanitizedConfig.serializer).toBe(DefaultSerializer);
     expect(sanitizedConfig.version).toBe(0);
     expect(sanitizedConfig.verbose).toBe(false);
-    expect(sanitizedConfig.whitelist).toEqual(['item1']);
-    expect(sanitizedConfig.blacklist).toEqual(['item2']);
+    expect(sanitizedConfig.whitelist).toEqual(["item1"]);
+    expect(sanitizedConfig.blacklist).toEqual(["item2"]);
   });
 });

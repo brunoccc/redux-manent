@@ -1,11 +1,11 @@
-import { Reducer } from 'redux';
+import { Reducer } from "redux";
 import {
   DefaultSerializer,
   NullStorage,
   Serializer,
   Storage,
-} from '../storage';
-import { KeyValueStore } from './Constants';
+} from "../storage";
+import { KeyValueStore } from "./Constants";
 
 export type ReduxManentConfig = {
   reducer: { [id: string]: Reducer };
@@ -16,7 +16,7 @@ export type ReduxManentConfig = {
   migrateState?: (
     state: KeyValueStore,
     from: number,
-    to: number,
+    to: number
   ) => Promise<KeyValueStore>;
   verbose?: boolean;
   whitelist?: string[];

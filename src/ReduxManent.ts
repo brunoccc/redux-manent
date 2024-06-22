@@ -1,13 +1,13 @@
-import { Dispatch, Reducer, combineReducers } from 'redux';
-import { ReduxManentConfig, sanitizeConfig } from './config';
-import { Log } from './utils';
+import { Dispatch, Reducer, combineReducers } from "redux";
+import { ReduxManentConfig, sanitizeConfig } from "./config";
+import { Log } from "./utils";
 import {
   ReduxManentState,
   handleInternalActions,
   reduxManentState,
   startAction,
-} from './state';
-import { saveState } from './storage';
+} from "./state";
+import { saveState } from "./storage";
 
 let dispatch: Dispatch;
 
@@ -35,7 +35,7 @@ export const persistReducer = (userConfig: ReduxManentConfig): Reducer => {
 };
 
 export const wakeUp = (_dispatch: Dispatch) => {
-  Log.d?.('WakeUp');
+  Log.d?.("WakeUp");
   dispatch = _dispatch;
   dispatch(startAction());
 };
