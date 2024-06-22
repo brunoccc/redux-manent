@@ -7,8 +7,9 @@ export const loadState = async (dispatch: Dispatch, config: Config) => {
   Log.d?.("Loading started...");
   const loadedState: KeyValueStore = {};
   const loaders: Promise<any>[] = [];
-  const loadedVersion =
-    (await readKey(STORAGE_VERSION_KEY, config))?.value || 0;
+  const loadedVersion = Number(
+    (await readKey(STORAGE_VERSION_KEY, config))?.value || 0
+  );
   Object.keys(config.reducer).forEach((key) => {
     if (config._filter.isAllowed(key)) {
       loaders.push(
