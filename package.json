@@ -30,7 +30,7 @@
     "ts-jest": "^29.1.4",
     "typescript": "^5.4.5"
   },
-  "dependencies": {
-    "redux": "^5.0.1"
+  "peerDependencies": {
+    "redux": ">5.0.0"
   }
 }
