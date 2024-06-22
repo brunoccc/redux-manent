@@ -28,9 +28,9 @@ To use `redux-manent`, follow these simple steps:
 In a typical scenario with [Redux Toolkit](https://redux-toolkit.js.org/), you have a Redux store configuration that looks like this:
 
 ```javascript
-import { configureStore } from '@reduxjs/toolkit';
-import todosReducer from '../features/todos/todosSlice';
-import filtersReducer from '../features/filters/filtersSlice';
+import { configureStore } from "@reduxjs/toolkit";
+import todosReducer from "../features/todos/todosSlice";
+import filtersReducer from "../features/filters/filtersSlice";
 
 export const store = configureStore({
   reducer: {
@@ -95,12 +95,12 @@ See the [Examples](#examples) section for more information.
 
 Creates the persisted reducer that can be passed to `configureStore`. Configure it with an object matching the `ReduxManentConfig` data type:
 
-- **`reducer`**: An object containing your Redux reducers that will be combined by `redux-manent` using `combineReducers`. This is a required parameter.
-- **`storage`**: The storage engine to use for persisting the state. This is a required parameter and can be any storage mechanism that implements the Web Storage API (`localStorage`, `sessionStorage`, or a custom storage object).
-- **`coolDownTime`**: An optional parameter that specifies the minimum interval between state saves to the storage. By caching frequent changes to the state, and only writing them at lower frequency, `redux-manent` helps to reduce the number of storage writes and can improve overall application performance.
-- **`serializer`**: An optional parameter to specify a custom serializer for the state. By default, JSON serialization is used.
-- **`version`**: An optional parameter to specify the version of the persisted state. This can be useful for state migrations.
-- **`migrateState`**: An optional function to handle state migration when the version changes. This function receives the current state, the previous version, and the new version as arguments, and should return the migrated state.
+- `reducer`: An object containing your Redux reducers that will be combined by `redux-manent` using `combineReducers`. This is a required parameter.
+- `storage`: The storage engine to use for persisting the state. This is a required parameter and can be any storage mechanism that implements the Web Storage API (`localStorage`, `sessionStorage`, or a custom storage object).
+- `coolDownTime`: An optional parameter that specifies the minimum interval between state saves to the storage. By caching frequent changes to the state, and only writing them at lower frequency, `redux-manent` helps to reduce the number of storage writes and can improve overall application performance.
+- `serializer`: An optional parameter to specify a custom serializer for the state. By default, JSON serialization is used.
+- `version`: An optional parameter to specify the version of the persisted state. This can be useful for state migrations.
+- `migrateState`: An optional function to handle state migration when the version changes. This function receives the current state, the previous version, and the new version as arguments, and should return the migrated state.
 
   ```typescript
   migrateState?: (
@@ -112,14 +112,14 @@ Creates the persisted reducer that can be passed to `configureStore`. Configure 
 
   Note that this function is asynchronous and can take as much time as you like. Also note that this function will be always called, even if the version has not changed. This gives you a chance to enrich/alter the state if needed (e.g. if you require to create computed parts of your state that are not persisted).
 
-- **`verbose`**: An optional boolean parameter to enable verbose logging for debugging purposes. By default, logging is not verbose, and it's automatically disabled on production builds.
-- **`whitelist`**: An optional array of reducer keys that should be persisted. Only the specified reducers will be persisted if this parameter is provided. If this parameter is not provided, **all** the reducers will be persisted.
+- `verbose`: An optional boolean parameter to enable verbose logging for debugging purposes. By default, logging is not verbose, and it's automatically disabled on production builds.
+- `whitelist`: An optional array of reducer keys that should be persisted. Only the specified reducers will be persisted if this parameter is provided. If this parameter is not provided, **all** the reducers will be persisted.
 
   ```typescript
   whitelist?: string[]
   ```
 
-- **`blacklist`**: An optional array of reducer keys that should not be persisted. All reducers except the specified ones will be persisted if this parameter is provided.
+- `blacklist`: An optional array of reducer keys that should not be persisted. All reducers except the specified ones will be persisted if this parameter is provided.
 
   ```typescript
   blacklist?: string[]
@@ -198,4 +198,4 @@ Contributions are welcome! Please open an issue or submit a pull request.
 
 ## Acknowledgements
 
-`redux-manent` is inspired by and built upon the ideas of existing Redux persistence libraries, although its code has been written from scratch using TypeScript and odern modern tools.
+`redux-manent` is inspired by and built upon the ideas of existing Redux persistence libraries, although its code has been written from scratch using TypeScript and other modern tools.
