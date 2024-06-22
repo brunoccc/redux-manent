@@ -1,38 +1,43 @@
-import { Config } from "./Config";
 import { Log } from "../utils";
+import { Reducer } from "redux";
+
+export type Filter = {
+  isAllowed: (key: string) => boolean;
+};
 
 type Cache = Record<string, boolean>;
 
-let allowedCache: Cache | undefined = undefined;
-
-export const isAllowed = (key: string, config: Config): boolean => {
-  if (allowedCache === undefined) {
-    allowedCache = buildCache(config);
-  }
-  return allowedCache[key];
-};
-
-const buildCache = (config: Config): { [key: string]: boolean } => {
+export const buildFilter = (
+  reducer: { [id: string]: Reducer },
+  whitelist?: string[],
+  blacklist?: string[]
+): Filter => {
   let cache: Cache = {};
 
   // If there is no whitelist, the default behaviour is "allow", otherwise it is "block"
-  const defaultFilter = config.whitelist.length === 0;
-  Object.keys(config.reducer).forEach((key) => {
+  const defaultFilter = whitelist === undefined || whitelist.length === 0;
+  Object.keys(reducer).forEach((key) => {
     cache[key] = defaultFilter;
   });
 
   // Enable whitelisted
-  config.whitelist.forEach((key) => {
+  whitelist?.forEach((key) => {
     cache[key] = true;
   });
 
   // Disable blacklisted
-  config.blacklist.forEach((key) => {
+  blacklist?.forEach((key) => {
     cache[key] = false;
   });
 
+  // Disable internal state persistence
   cache["reduxManentState"] = false;
 
   Log.v?.("Filter cache built", { cache });
-  return cache;
+
+  return {
+    isAllowed: (key: string): boolean => {
+      return cache[key];
+    },
+  };
 };

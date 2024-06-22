@@ -2,7 +2,7 @@ import { Reducer } from "redux";
 import { sanitizeConfig, ReduxManentConfig, Config } from "..";
 import { NullStorage, DefaultSerializer, Serializer } from "../../storage";
 
-describe("sanitizeConfig", () => {
+describe("Config", () => {
   it("should use default values if no config is provided", () => {
     const reducer = { item1: {} as Reducer };
     const storage = NullStorage;

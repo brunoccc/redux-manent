@@ -1,9 +1,4 @@
-import {
-  Config,
-  isAllowed,
-  KeyValueStore,
-  STORAGE_VERSION_KEY,
-} from "../config";
+import { Config, KeyValueStore, STORAGE_VERSION_KEY } from "../config";
 import { Log } from "../utils";
 
 let currentVersion: number | undefined;
@@ -21,7 +16,7 @@ export const saveState = (
   for (const [key, oldValue] of Object.entries(before || {})) {
     const newValue = after[key as keyof KeyValueStore];
     if (oldValue !== newValue) {
-      if (isAllowed(key, config)) {
+      if (config._filter.isAllowed(key)) {
         Log.v?.("Key change detected", { key, oldValue, newValue });
         writeData(key, newValue, config);
       } else {

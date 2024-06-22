@@ -1,11 +1,7 @@
 import { Reducer } from "redux";
-import {
-  DefaultSerializer,
-  NullStorage,
-  Serializer,
-  Storage,
-} from "../storage";
+import { DefaultSerializer, Serializer, Storage } from "../storage";
 import { KeyValueStore } from "./Constants";
+import { Filter, buildFilter } from "./Filters";
 
 export type ReduxManentConfig = {
   reducer: { [id: string]: Reducer };
@@ -23,7 +19,11 @@ export type ReduxManentConfig = {
   blacklist?: string[];
 };
 
-export type Config = Required<ReduxManentConfig>;
+type ReduxManentContext = {
+  _filter: Filter;
+};
+
+export type Config = Required<ReduxManentConfig> & ReduxManentContext;
 
 export const sanitizeConfig = (config: ReduxManentConfig): Config => {
   const defaultConfig: Config = {
@@ -37,6 +37,7 @@ export const sanitizeConfig = (config: ReduxManentConfig): Config => {
     verbose: config.verbose ?? false,
     whitelist: config.whitelist ?? [],
     blacklist: config.blacklist ?? [],
+    _filter: buildFilter(config.reducer, config.whitelist, config.blacklist),
   };
 
   return defaultConfig;
