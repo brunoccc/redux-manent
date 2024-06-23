@@ -1,6 +1,10 @@
 import { Config, KeyValueStore, STORAGE_VERSION_KEY } from "../config";
 import { Log } from "../utils";
 
+let lastWritingTime = 0;
+let coolDownCache: KeyValueStore = {};
+let coolDownTimeout: NodeJS.Timeout | undefined = undefined;
+
 export const saveState = (
   before: KeyValueStore,
   after: KeyValueStore,
@@ -8,53 +12,51 @@ export const saveState = (
   saveVersion: boolean = false
 ) => {
   if (saveVersion) {
-    writeData(STORAGE_VERSION_KEY, { value: config.version }, config);
+    writeKey(STORAGE_VERSION_KEY, { value: config.version }, config);
   }
 
+  // Add to cache
   for (const [key, oldValue] of Object.entries(before || {})) {
     const newValue = after[key as keyof KeyValueStore];
     if (oldValue !== newValue) {
-      if (config._filter.isAllowed(key)) {
-        Log.v?.("Key change detected", { key, oldValue, newValue });
-        writeData(key, newValue, config);
-      } else {
-        Log.v?.("Key change skipped", { key, oldValue, newValue });
-      }
+      coolDownCache[key] = newValue;
     }
   }
+
+  if (coolDownTimeout !== undefined) {
+    // Timer is already running, nothing else to do for now
+    return;
+  }
+
+  // Check if we can write now or we need to set a new timer
+  const timeLeft =
+    config.coolDownTime === 0
+      ? 0
+      : lastWritingTime + config.coolDownTime - Date.now();
+
+  if (timeLeft <= 0) {
+    // Flush immediately
+    flushCache(config);
+    return;
+  }
+  // Set a delayed flush
+  coolDownTimeout = setTimeout(() => {
+    flushCache(config);
+  }, timeLeft);
 };
 
-let coolDownCache: KeyValueStore = {};
-let coolDown = false;
-
-const writeData = (
-  key: string,
-  newValue: object | undefined,
-  config: Config
-): boolean => {
-  if (coolDown) {
-    // Cooldown in progress: just cache the data
-    coolDownCache[key] = newValue;
-    return false;
+const flushCache = (config: Config) => {
+  const now = Date.now();
+  coolDownTimeout = undefined;
+  lastWritingTime = now;
+  for (const [key, value] of Object.entries(coolDownCache)) {
+    if (config._filter.isAllowed(key)) {
+      writeKey(key, value, config);
+    } else {
+      Log.v?.("Key skipped", { key, value });
+    }
   }
-
-  // Write data immediately
-  writeKey(key, newValue, config);
-
-  // Start cooldown
-  if (config.coolDownTime > 0) {
-    coolDown = true;
-    setTimeout(() => {
-      // Cooldown expired: flush
-      for (const [key, value] of Object.entries(coolDownCache)) {
-        writeKey(key, value, config);
-      }
-      coolDownCache = {};
-      coolDown = false;
-    }, config.coolDownTime);
-  }
-
-  return true;
+  coolDownCache = {};
 };
 
 const writeKey = (
