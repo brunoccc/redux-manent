@@ -44,7 +44,7 @@ const writeData = (
   writeKey(key, newValue, config);
 
   // Start cooldown
-  if ((config.coolDownTime || 0) > 0) {
+  if (config.coolDownTime > 0) {
     coolDown = true;
     setTimeout(() => {
       // Cooldown expired: flush

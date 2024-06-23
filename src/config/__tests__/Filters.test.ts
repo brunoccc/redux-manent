@@ -3,12 +3,13 @@ import { sanitizeConfig, Config } from "..";
 import { NullStorage } from "../../storage";
 
 describe("Filters", () => {
-  it("should allow everything if no whitelist specified", () => {
+  it("should allow everything except the internal state by default", () => {
     const config: Config = sanitizeConfig({
       reducer: {
         item1: {} as Reducer,
         item2: {} as Reducer,
         item3: {} as Reducer,
+        reduxManentState: {} as Reducer,
       },
       storage: NullStorage,
     });
@@ -16,6 +17,7 @@ describe("Filters", () => {
     expect(config._filter.isAllowed("item1")).toBe(true);
     expect(config._filter.isAllowed("item2")).toBe(true);
     expect(config._filter.isAllowed("item3")).toBe(true);
+    expect(config._filter.isAllowed("reduxManentState")).toBe(false);
   });
 
   it("should deny everything not included in the whitelist", () => {

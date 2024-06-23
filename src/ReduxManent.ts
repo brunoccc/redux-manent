@@ -13,7 +13,6 @@ let dispatch: Dispatch;
 
 export const persistReducer = (userConfig: ReduxManentConfig): Reducer => {
   const config = sanitizeConfig(userConfig);
-  Log.setVerbose?.(config.verbose);
 
   // Inject internal state and default
   const combinedReducers = combineReducers({

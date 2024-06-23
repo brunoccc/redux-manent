@@ -2,6 +2,7 @@ import { Reducer } from "redux";
 import { DefaultSerializer, Serializer, Storage } from "../storage";
 import { KeyValueStore } from "./Constants";
 import { Filter, buildFilter } from "./Filters";
+import { Log } from "../utils";
 
 export type ReduxManentConfig = {
   reducer: { [id: string]: Reducer };
@@ -39,6 +40,8 @@ export const sanitizeConfig = (config: ReduxManentConfig): Config => {
     blacklist: config.blacklist ?? [],
     _filter: buildFilter(config.reducer, config.whitelist, config.blacklist),
   };
+
+  Log.setVerbose?.(defaultConfig.verbose);
 
   return defaultConfig;
 };
