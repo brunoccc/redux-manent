@@ -12,7 +12,7 @@ export const migrateState = async (
 ) => {
   Log.d?.(`Migrating from version ${loadedVersion} to ${config.version} ...`);
   const tempState = await config.migrateState(
-    { ...loadedState },
+    clone(loadedState),
     loadedVersion,
     config.version
   );
@@ -38,11 +38,15 @@ export const migrateState = async (
   dispatch(readyAction(migratedState, config.version));
 };
 
-function isObject(obj: any): boolean {
-  return obj !== null && typeof obj === "object";
-}
+const clone = (obj: any): any => {
+  return JSON.parse(JSON.stringify(obj));
+};
 
-function deepEqual(obj1: any, obj2: any): boolean {
+const isObject = (obj: any): boolean => {
+  return obj !== null && typeof obj === "object";
+};
+
+const deepEqual = (obj1: any, obj2: any): boolean => {
   if (obj1 === obj2) {
     return true;
   }
@@ -68,4 +72,4 @@ function deepEqual(obj1: any, obj2: any): boolean {
   }
 
   return true;
-}
+};
