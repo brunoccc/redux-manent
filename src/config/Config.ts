@@ -12,7 +12,7 @@ export type ReduxManentConfig = {
   version?: number;
   migrateState?: (
     state: KeyValueStore,
-    from: number,
+    from: number | undefined,
     to: number
   ) => Promise<KeyValueStore>;
   verbose?: boolean;

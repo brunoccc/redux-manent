@@ -22,7 +22,7 @@ describe("Reducers", () => {
 
   it("should handle START internal action", () => {
     const mockDispatch = jest.fn();
-    const loadStateMock = jest.spyOn(LoaderModule, "loadState");
+    const mockLoadState = jest.spyOn(LoaderModule, "loadState");
     const config = sanitizeConfig({
       reducer: {
         item1: {} as Reducer,
@@ -39,7 +39,7 @@ describe("Reducers", () => {
       config
     );
 
-    expect(loadStateMock).toHaveBeenCalledTimes(1);
+    expect(mockLoadState).toHaveBeenCalledTimes(1);
     expect(state.reduxManentState.loading).toBe(true);
     expect(state.reduxManentState.ready).toBe(false);
     expect(state.reduxManentState.version).toBe(undefined);

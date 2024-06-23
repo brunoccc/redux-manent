@@ -1,7 +1,7 @@
 import { Config, KeyValueStore, STORAGE_VERSION_KEY } from "../config";
 import { Dispatch } from "redux";
 import { Log } from "../utils";
-import { readyAction } from "../state";
+import { migrateAction } from "../state";
 
 export const loadState = async (dispatch: Dispatch, config: Config) => {
   Log.d?.("Loading started...");
@@ -24,16 +24,8 @@ export const loadState = async (dispatch: Dispatch, config: Config) => {
     }
   });
   await Promise.all(loaders);
-
-  Log.d?.(`Migrating from version ${loadedVersion} to ${config.version} ...`);
-  const migratedState = await config.migrateState(
-    loadedState,
-    loadedVersion,
-    config.version
-  );
-
-  Log.d?.("Done!");
-  dispatch(readyAction(migratedState, config.version));
+  Log.d?.("Load complete.", JSON.stringify(loadedState));
+  dispatch(migrateAction(loadedState, loadedVersion));
 };
 
 const readKey = async (key: string, config: Config): Promise<any> => {

@@ -1,7 +1,7 @@
 import { Reducer } from "redux";
 import { Config, STORAGE_VERSION_KEY, sanitizeConfig } from "../../config";
 import { loadState } from "../Loader";
-import { readyAction } from "../../state";
+import { migrateAction } from "../../state";
 import { Storage } from "../Storage";
 
 let mockStorage: Storage;
@@ -38,7 +38,7 @@ describe("Loader", () => {
     await loadState(mockDispatch, config);
 
     expect(mockDispatch).toHaveBeenCalledWith(
-      readyAction(
+      migrateAction(
         {
           item1: { value: "VALUE_FOR_KEY:item1" },
           item2: { value: "VALUE_FOR_KEY:item2" },
@@ -46,40 +46,6 @@ describe("Loader", () => {
         },
         42
       )
-    );
-  });
-
-  it("should properly migrate the persisted version", async () => {
-    const mockMigratedState = {
-      item_a: { text: "Hello" },
-      item_b: { text: "World" },
-    };
-    const mockMigrate = jest.fn().mockReturnValue(mockMigratedState);
-    const config: Config = sanitizeConfig({
-      reducer: {
-        item1: {} as Reducer,
-        item2: {} as Reducer,
-        item3: {} as Reducer,
-      },
-      storage: mockStorage,
-      migrateState: mockMigrate,
-      version: 43,
-    });
-    const mockDispatch = jest.fn();
-
-    await loadState(mockDispatch, config);
-
-    expect(mockMigrate).toHaveBeenCalledWith(
-      {
-        item1: { value: "VALUE_FOR_KEY:item1" },
-        item2: { value: "VALUE_FOR_KEY:item2" },
-        item3: { value: "VALUE_FOR_KEY:item3" },
-      },
-      42,
-      43
-    );
-    expect(mockDispatch).toHaveBeenCalledWith(
-      readyAction(mockMigratedState, 43)
     );
   });
 
@@ -100,7 +66,7 @@ describe("Loader", () => {
     await loadState(mockDispatch, config);
 
     expect(mockDispatch).toHaveBeenCalledWith(
-      readyAction(
+      migrateAction(
         {
           item1: { value: "VALUE_FOR_KEY:item1" },
           item3: { value: "VALUE_FOR_KEY:item3" },

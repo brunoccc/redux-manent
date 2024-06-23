@@ -1,16 +1,14 @@
 import { Config, KeyValueStore, STORAGE_VERSION_KEY } from "../config";
 import { Log } from "../utils";
 
-let currentVersion: number | undefined;
-
 export const saveState = (
   before: KeyValueStore,
   after: KeyValueStore,
-  config: Config
+  config: Config,
+  saveVersion: boolean = false
 ) => {
-  if (config.version !== currentVersion) {
+  if (saveVersion) {
     writeData(STORAGE_VERSION_KEY, { value: config.version }, config);
-    currentVersion = config.version;
   }
 
   for (const [key, oldValue] of Object.entries(before || {})) {
@@ -20,7 +18,7 @@ export const saveState = (
         Log.v?.("Key change detected", { key, oldValue, newValue });
         writeData(key, newValue, config);
       } else {
-        Log.v?.("Key change blacklisted", { key, oldValue, newValue });
+        Log.v?.("Key change skipped", { key, oldValue, newValue });
       }
     }
   }

@@ -1,17 +1,24 @@
 import { Action, Dispatch, Reducer } from "redux";
-import { ACTION_READY, ACTION_START, ReduxManentAction } from "./Actions";
+import {
+  ACTION_MIGRATE,
+  ACTION_READY,
+  ACTION_START,
+  ReduxManentAction,
+} from "./Actions";
 import { Config, KeyValueStore } from "../config";
-import { loadState } from "../storage";
+import { loadState, migrateState } from "../storage";
 import { Log } from "../utils";
 
 export type ReduxManentState = {
   loading: boolean;
+  migrating: boolean;
   ready: boolean;
   version?: number;
 };
 
 const DEFAULT_STATE: ReduxManentState = {
   loading: false,
+  migrating: false,
   ready: false,
   version: undefined,
 };
@@ -33,13 +40,36 @@ export const handleInternalActions = (
   action: Action,
   config: Config
 ) => {
-  if (action.type === ACTION_START || action.type === ACTION_READY) {
+  if (
+    action.type === ACTION_START ||
+    action.type === ACTION_MIGRATE ||
+    action.type === ACTION_READY
+  ) {
     const manentAction = action as ReduxManentAction;
     switch (manentAction.type) {
       case ACTION_START: {
         loadState(dispatch, config);
         const reduxManentState: ReduxManentState = {
           loading: true,
+          migrating: false,
+          ready: false,
+          version: undefined,
+        };
+        return {
+          ...state,
+          reduxManentState,
+        };
+      }
+      case ACTION_MIGRATE: {
+        migrateState(
+          dispatch,
+          config,
+          manentAction.payload.loadedState,
+          manentAction.payload.loadedVersion
+        );
+        const reduxManentState: ReduxManentState = {
+          loading: false,
+          migrating: true,
           ready: false,
           version: undefined,
         };
@@ -51,6 +81,7 @@ export const handleInternalActions = (
       case ACTION_READY: {
         const reduxManentState: ReduxManentState = {
           loading: false,
+          migrating: false,
           ready: true,
           version: manentAction.payload.loadedVersion,
         };
