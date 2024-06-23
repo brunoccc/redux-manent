@@ -3,7 +3,7 @@ import { sanitizeConfig, Config } from "..";
 import { NullStorage } from "../../storage";
 
 describe("Filters", () => {
-  it("should allow everything except the internal state by default", () => {
+  it("by default should allow everything except the internal state", () => {
     const config: Config = sanitizeConfig({
       reducer: {
         item1: {} as Reducer,

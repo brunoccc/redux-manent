@@ -49,6 +49,33 @@ describe("Loader", () => {
     );
   });
 
+  it("should only load the whitelisted reducers", async () => {
+    const config: Config = sanitizeConfig({
+      reducer: {
+        item1: {} as Reducer,
+        item2: {} as Reducer,
+        item3: {} as Reducer,
+      },
+      storage: mockStorage,
+      version: 42,
+      whitelist: ["item2", "item3"],
+    });
+
+    const mockDispatch = jest.fn();
+
+    await loadState(mockDispatch, config);
+
+    expect(mockDispatch).toHaveBeenCalledWith(
+      migrateAction(
+        {
+          item2: { value: "VALUE_FOR_KEY:item2" },
+          item3: { value: "VALUE_FOR_KEY:item3" },
+        },
+        42
+      )
+    );
+  });
+
   it("should not load a blacklisted reducer", async () => {
     const config: Config = sanitizeConfig({
       reducer: {
