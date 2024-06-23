@@ -1,6 +1,6 @@
 {
   "name": "redux-manent",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "author": "Bruno Cicciarello",
   "license": "MIT",
   "description": "A simple-to-use Redux persistence library",  
