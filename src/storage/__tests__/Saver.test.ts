@@ -157,6 +157,30 @@ describe("Saver", () => {
     expect(mockStorage.setItem.mock.calls[3]).toBeUndefined();
   });
 
+  it("should do nothing when the state is unchanged", () => {
+    const { saveState } = require("../Saver");
+    const mockStorage = {
+      getItem: jest.fn(),
+      setItem: jest.fn(),
+      removeItem: jest.fn(),
+    };
+    const config = sanitizeConfig({
+      reducer: {
+        item1: {} as Reducer,
+        item2: {} as Reducer,
+        item3: {} as Reducer,
+      },
+      storage: mockStorage,
+      version: 42,
+      coolDownTime: 0,
+    });
+
+    saveState(STATE_T0, STATE_T0, config);
+    saveState(STATE_T1, STATE_T1, config);
+
+    expect(mockStorage.setItem.mock.calls[0]).toBeUndefined();
+  });
+
   it("should handle the rate limit", async () => {
     const { saveState } = require("../Saver");
     jest.useFakeTimers();
